@@ -9,3 +9,11 @@ Another important change is the use of Rust's `standard error` handling mechanis
 These changes make the Rust program more robust and reliable than the original Bash script, with better memory management, improved error handling, and more accurate timing information.
 
 For more information on the original project, ploop.sh, please visit `https://github.com/apple-fritter/ploop.sh`.
+
+## Requirements
+There are two external crates that are used in the code and must be included as dependencies in the `Cargo.toml` file in, order for the program to compile:
+
+```
+chrono: A crate for working with dates and times.
+clap: A crate for parsing command-line arguments.
+```
