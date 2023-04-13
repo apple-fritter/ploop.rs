@@ -1,4 +1,4 @@
-# ploop.rs, A reimplementation of [ploop.sh](https://github.com/apple-fritter/ploop.sh), in Rust.
+## ploop.rs: [ploop.sh](https://github.com/apple-fritter/ploop.sh), oxidized.
 
 The original ploop script was written in Bash and used the `read` command to read each line of a `TSV` file and process it one at a time. This Rust program, on the other hand, reads the entire file into memory as a `Vector` type, which allows for better memory management and faster processing.
 
