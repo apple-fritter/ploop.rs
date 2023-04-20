@@ -17,3 +17,7 @@ There are two external crates that are used in the code and must be included as 
 chrono: A crate for working with dates and times.
 clap: A crate for parsing command-line arguments.
 ```
+
+## License
+
+This script is released under the [MIT License](LICENSE).
