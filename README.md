@@ -1,6 +1,6 @@
 # ploop.rs
 More robust and reliable than the original Bash script, with better memory management, improved error handling, and more accurate timing information.
-For more information on the original project, ploop.sh, please visit `https://github.com/apple-fritter/ploop.sh`, the [ploop.sh](https://github.com/apple-fritter/ploop.sh) GitHub page.
+For more information on the original project, ploop.sh, please visit the [ploop.sh](https://github.com/apple-fritter/ploop.sh) GitHub page.
 
 ## [ploop.sh](https://github.com/apple-fritter/ploop.sh), oxidized.
 
