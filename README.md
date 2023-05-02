@@ -32,6 +32,33 @@ Error Handling: The program handles various potential errors. It reports any par
 
 * The columns_to_process variable is now assigned `None` if any of the column indices are invalid. This way, it can handle the case of invalid column indices separately later in the code. When an invalid column index is provided, an error will be raised and propagated up the call stack. You can handle this error as needed, such as displaying an error message to the user or logging the error.
 
+## Usage
+### Processing All Columns
+To process all columns in a TSV file named data.tsv using the external program myprogram, run the following command:
+
+```bash
+$ ./ploop myprogram data.tsv 5
+```
+In this example, the program expects data.tsv to have 5 columns. It will read each line of the file, skip lines starting with '#', and pass the entire row to myprogram for processing.
+
+### Processing Specific Columns
+To process specific columns in a TSV file named `data.tsv`, you can provide the column indices as a space-separated list in the columns_to_process argument. For example, to process columns 1, 3, and 4, run the following command:
+
+```bash
+$ ./ploop myprogram data.tsv 5 1 3 4
+```
+In this case, the program will extract the values from columns 1, 3, and 4 for each line in the TSV file and pass them to myprogram for processing.
+
+### Error Handling
+If an invalid column index is provided in the columns_to_process argument, the program will display an error message and exit with a non-zero exit code. For example, if you provide an out-of-range column index like 6 for a TSV file with only 5 columns, you will see an error message like the following:
+
+```bash
+$ ./ploop myprogram data.tsv 5 1 3 6
+Error: Invalid column index: 6. Column index must be between 1 and 5.
+```
+
+Make sure to provide valid column indices within the range of the number of columns in your TSV file.
+
 ## Requirements
 There are two external crates that are used in the code and must be included as dependencies in the `Cargo.toml` file in, order for the program to compile:
 
