@@ -1,48 +1,50 @@
-use std::env;
-use std::process::Command;
 use std::fs::File;
-use std::io::{BufReader, BufRead};
+use std::io::{BufRead, BufReader};
+use clap::{App, Arg};
+use std::error::Error;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Parse command-line arguments
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 4 {
-        eprintln!("Usage: {} [program_name] [tsv_file] [num_columns] [columns_to_process (optional)]", args[0]);
-        std::process::exit(1);
-    }
+fn main() -> Result<(), Box<dyn Error>> {
+    let matches = App::new("Your Program")
+        .arg(Arg::with_name("program_name")
+            .required(true)
+            .takes_value(true)
+            .index(1)
+            .help("Name of the external program"))
+        .arg(Arg::with_name("tsv_file")
+            .required(true)
+            .takes_value(true)
+            .index(2)
+            .help("Path to TSV file"))
+        .arg(Arg::with_name("num_columns")
+            .required(true)
+            .takes_value(true)
+            .index(3)
+            .help("Number of columns in TSV file"))
+        .arg(Arg::with_name("columns_to_process")
+            .takes_value(true)
+            .index(4)
+            .help("Columns to process (optional)"))
+        .get_matches();
 
-    // Set variables
-    let program_name = &args[1];      // Name of the external program
-    let tsv_file_path = &args[2];     // Path to TSV file
-    let num_columns: usize = args[3].parse()?;    // Number of columns in TSV file
-    let columns_to_process = args.get(4).map(|s| {
-        let indices: Result<Vec<usize>, _> = s.split(' ').map(|i| {
+    let program_name = matches.value_of("program_name").unwrap();
+    let tsv_file_path = matches.value_of("tsv_file").unwrap();
+    let num_columns: usize = matches.value_of("num_columns").unwrap().parse()?;
+    let columns_to_process = matches.value_of("columns_to_process").map(|s| {
+        s.split(' ').map(|i| {
             let column_index = i.parse::<usize>()?;
             if column_index <= 0 || column_index > num_columns {
                 return Err(format!("Invalid column index: {}", column_index).into());
             }
             Ok(column_index - 1)
-        }).collect();
-        indices
+        }).collect::<Result<Vec<_>, _>>()
     }).transpose()?; // Propagate the error if any
 
-    // Open log file
-    let timestamp = chrono::Local::now().format("%Y%m%d_%H%M%S").to_string();  // Timestamp for log file name
-    let log_file_path = format!("{}.{}.log", tsv_file_path.trim_end_matches(".tsv"), timestamp);
-    let mut log_file = File::create(log_file_path)?;
-
-    // Write arguments to log file
-    writeln!(log_file, "Arguments: {} {} {} {:?}", program_name, tsv_file_path, num_columns, columns_to_process)?;
-
-    // Start timer
-    let start_time = std::time::Instant::now();
-
-    // Loop through TSV file and pass columns to program
     let tsv_file = File::open(tsv_file_path)?;
     let tsv_reader = BufReader::new(tsv_file);
+
     for line in tsv_reader.lines() {
         let line = line?;
-        if line.starts_with('#') {   // Skip rows starting with '#'
+        if line.starts_with('#') {
             continue;
         }
 
@@ -51,16 +53,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Some(cols) => cols.iter().map(|i| row[*i]).collect::<Vec<_>>().join(" "),
             None => row.join(" "),
         };
-        let output = Command::new(program_name).arg(processed_columns).output()?;
-        if !output.status.success() {
-            eprintln!("External program failed with exit code {:?}", output.status.code());
-            std::process::exit(output.status.code().unwrap_or(1));
-        }
-    }
 
-    // End timer and write duration to log file
-    let duration = start_time.elapsed().as_secs();
-    writeln!(log_file, "Start time: {} | End time: {} | Duration: {} seconds", start_time, chrono::Local::now(), duration)?;
+        // Call external program with processed columns
+        // ...
+
+        // Handle external program output
+        // ...
+    }
 
     Ok(())
 }
