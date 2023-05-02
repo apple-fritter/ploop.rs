@@ -6,12 +6,31 @@ The original ploop was written in Bash and used the `read` command to read each 
 
 In addition, the Rust program uses Rust's built-in `timer` functionality to record the start and end times of the program's execution, rather than using the `date` command in a Bash script.
 
+## Functions and features:
+
+Command-Line Argument Parsing: The program uses the clap crate to define and parse command-line arguments. It expects the following arguments:
+```
+'program_name': Name of the external program to be called.
+'tsv_file': Path to the TSV file to process.
+'num_columns': Number of columns in the TSV file.
+'columns_to_process' (optional): Indices of the columns to process.
+```
+Input Validation: The program performs input validation on the command-line arguments. It ensures that the column indices provided in the columns_to_process argument are within the valid range (between 1 and num_columns). If an invalid column index is detected, an error message is displayed.
+
+TSV File Processing: The program opens the specified TSV file and reads its contents line by line. It skips lines starting with '#'. Each non-skipped line is split into fields using the tab character ('\t') as the delimiter, resulting in a vector of field values.
+
+Column Processing: Based on the provided columns_to_process argument, the program selects the relevant columns from each line. If columns_to_process is not provided, it processes all columns. The selected columns are joined together using a space character as the separator.
+
+Calling External Program: The program calls the external program specified by the program_name argument, passing the processed columns as an argument. This code snippet is currently commented out in the provided implementation, so you would need to add the necessary code to make the actual external program call.
+
+Error Handling: The program handles various potential errors. It reports any parsing errors that occur during the conversion of command-line arguments to the appropriate types. It also checks for errors when opening the TSV file and reading its contents. If any errors occur, they are propagated up and displayed to the user.R
+
 ## Notable changes
-The use of Rust's `standard error` handling mechanisms. In the original script, errors would simply be printed to the console and the program would continue running. The Rust program, however, prints errors to standard error and exits with a non-zero exit code, which is a common convention in Unix-based systems.
+* The use of Rust's `standard error` handling mechanisms. In the original script, errors would simply be printed to the console and the program would continue running. The Rust program, however, prints errors to standard error and exits with a non-zero exit code, which is a common convention in Unix-based systems.
 
-When parsing the `columns_to_process` argument, there will be a validation check for each column index. If the column index is less than or equal to zero or greater than `num_columns`, an error is returned. The error message includes the specific invalid column index.
+* When parsing the `columns_to_process` argument, there will be a validation check for each column index. If the column index is less than or equal to zero or greater than `num_columns`, an error is returned. The error message includes the specific invalid column index.
 
-The columns_to_process variable is now assigned `None` if any of the column indices are invalid. This way, it can handle the case of invalid column indices separately later in the code. When an invalid column index is provided, an error will be raised and propagated up the call stack. You can handle this error as needed, such as displaying an error message to the user or logging the error.
+* The columns_to_process variable is now assigned `None` if any of the column indices are invalid. This way, it can handle the case of invalid column indices separately later in the code. When an invalid column index is provided, an error will be raised and propagated up the call stack. You can handle this error as needed, such as displaying an error message to the user or logging the error.
 
 ## Requirements
 There are two external crates that are used in the code and must be included as dependencies in the `Cargo.toml` file in, order for the program to compile:
