@@ -15,7 +15,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let program_name = &args[1];      // Name of the external program
     let tsv_file_path = &args[2];     // Path to TSV file
     let num_columns: usize = args[3].parse()?;    // Number of columns in TSV file
-    let columns_to_process = args.get(4).map(|s| s.split(' ').map(|i| i.parse::<usize>().unwrap() - 1).collect::<Vec<_>>());
+    let columns_to_process = args.get(4).map(|s| {
+        let indices: Result<Vec<usize>, _> = s.split(' ').map(|i| {
+            let column_index = i.parse::<usize>()?;
+            if column_index <= 0 || column_index > num_columns {
+                return Err(format!("Invalid column index: {}", column_index).into());
+            }
+            Ok(column_index - 1)
+        }).collect();
+        indices
+    }).transpose()?; // Propagate the error if any
 
     // Open log file
     let timestamp = chrono::Local::now().format("%Y%m%d_%H%M%S").to_string();  // Timestamp for log file name
