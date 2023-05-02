@@ -6,7 +6,12 @@ The original ploop was written in Bash and used the `read` command to read each 
 
 In addition, the Rust program uses Rust's built-in `timer` functionality to record the start and end times of the program's execution, rather than using the `date` command in a Bash script.
 
-Another important change is the use of Rust's `standard error` handling mechanisms. In the original script, errors would simply be printed to the console and the program would continue running. The Rust program, however, prints errors to standard error and exits with a non-zero exit code, which is a common convention in Unix-based systems.
+## Notable changes
+The use of Rust's `standard error` handling mechanisms. In the original script, errors would simply be printed to the console and the program would continue running. The Rust program, however, prints errors to standard error and exits with a non-zero exit code, which is a common convention in Unix-based systems.
+
+When parsing the `columns_to_process` argument, there will be a validation check for each column index. If the column index is less than or equal to zero or greater than `num_columns`, an error is returned. The error message includes the specific invalid column index.
+
+The columns_to_process variable is now assigned `None` if any of the column indices are invalid. This way, it can handle the case of invalid column indices separately later in the code. When an invalid column index is provided, an error will be raised and propagated up the call stack. You can handle this error as needed, such as displaying an error message to the user or logging the error.
 
 ## Requirements
 There are two external crates that are used in the code and must be included as dependencies in the `Cargo.toml` file in, order for the program to compile:
