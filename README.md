@@ -59,6 +59,50 @@ Error: Invalid column index: 6. Column index must be between 1 and 5.
 
 Make sure to provide valid column indices within the range of the number of columns in your TSV file.
 
+## Process Flowchart
+```
+┌─ Start Program
+│
+├─ Parse Command Line
+│   ├─ Check if Required Arguments are Provided
+│   │   ├─ If Missing Arguments:
+│   │   │   └─ Display Error
+│   │   │
+│   │   └─ Extract Program Name
+│   │
+│   ├─ If Invalid Arguments:
+│   │   └─ Display Error
+│   │
+│   └─ Read TSV File
+│       ├─ If Error:
+│       │   └─ Display Error
+│       │
+│       └─ Process TSV File
+│           ├─ Loop:
+│           │   ├─ Read Line
+│           │   │   ├─ If Line starts with '#':
+│           │   │   │   └─ Continue Loop
+│           │   │   │
+│           │   │   └─ Split Line into Columns
+│           │   │
+│           │   ├─ If Columns to Process Provided:
+│           │   │   ├─ Extract specified Columns
+│           │   │   ├─ Join Processed Columns
+│           │   │   ├─ Call External Program with Processed Columns
+│           │   │   └─ Handle External Program Output
+│           │   │
+│           │   └─ If Columns to Process Not Provided:
+│           │       ├─ Join All Columns
+│           │       ├─ Call External Program with All Columns
+│           │       └─ Handle External Program Output
+│           │
+│           └─ If Error:
+│               └─ Display Error
+│
+└─ End Program
+```
+
+
 ## Requirements
 There are two external crates that are used in the code and must be included as dependencies in the `Cargo.toml` file in, order for the program to compile:
 
