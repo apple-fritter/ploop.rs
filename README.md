@@ -1,6 +1,8 @@
 # ploop.rs
 More robust and reliable than the original Bash script, with better memory management, improved error handling, and more accurate timing information.
-For more information on the original project, please visit the [ploop.sh](https://github.com/apple-fritter/ploop.sh) GitHub page.
+
+> #### For more information on the original project
+> please visit the [ploop.sh](https://github.com/apple-fritter/ploop.sh) GitHub page.
 
 The original ploop was written in Bash and used the `read` command to read each line of a `TSV` file and process it one at a time. This Rust program, on the other hand, reads the entire file into memory as a `Vector` type, which allows for better memory management and faster processing.
 
